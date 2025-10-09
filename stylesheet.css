@@ -1,0 +1,511 @@
+/* === General Page Styles === */
+body {
+    background-image: url('Images/Bliss.webp');
+    background-size: cover;
+    /* Makes background fill the screen */
+    background-attachment: fixed;
+    /* Keeps background still when scrolling */
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    /* Full screen height */
+    margin: 0;
+    padding: 0;
+    font-family: "DOSfont", sans-serif;
+    /* Uses custom DOS font (see @font-face) */
+    overflow: hidden;
+    /* Hides scrollbars */
+}
+
+/* === Navigation Container === */
+.container {
+    display: grid;
+    /* First use of CSS Grid */
+    grid-template-columns: repeat(4, 150px);
+    /* 4 equal columns */
+    grid-template-rows: 100px;
+    /* One row, 100px tall */
+    justify-content: center;
+    /* Centers grid horizontally */
+    margin-bottom: 20px;
+    padding-top: 20px;
+}
+
+/* === Main Box (Welcome Section) === */
+.Box {
+    display: grid;
+    margin: 20px auto;
+    /* Centers horizontally */
+    width: 550px;
+    height: 400px;
+    background-color: mintcream;
+    border: 5px solid rgb(30, 83, 35);
+    border-radius: 10px;
+    /* Rounded corners */
+    box-shadow: 5px 5px 2px rgba(0, 0, 0, 0.338);
+    /* Drop shadow */
+    text-align: center;
+    position: relative;
+    /* Needed for absolutely positioned children */
+}
+
+/* === Smaller Box (Social Media Section) === */
+.AnotherBox {
+    display: grid;
+    margin: 150px auto;
+    width: 550px;
+    height: 80px;
+    background-color: mintcream;
+    border: 5px solid rgb(30, 83, 35);
+    border-radius: 10px;
+    box-shadow: 5px 5px 2px rgba(0, 0, 0, 0.338);
+    text-align: center;
+}
+
+/* === Pixel Art Image Styling === */
+.Pixelart {
+    image-rendering: crisp-edges;
+    /* Keeps pixel art sharp */
+    position: relative;
+    width: fit-content;
+    height: fit-content;
+}
+
+/* === Custom Font Import === */
+@font-face {
+    font-family: 'DOSfont';
+    src: url('Arcade.otf') format('truetype');
+}
+
+/* === General Image Styling (first absolute positioning) === */
+img {
+    position: absolute;
+    /* Positioned relative to parent */
+    bottom: -85px;
+    /* Moves image below the box */
+    right: -510px;
+    /* Moves image to the right */
+    scale: 300%;
+    /* Enlarges image */
+    transform-origin: bottom right;
+    /* Scales from bottom-right corner */
+}
+
+/* === Navigation Buttons === */
+.button {
+    font-family: "DOSfont", sans-serif;
+    width: 150px;
+    height: 80px;
+    background-color: mintcream;
+    border: 5px solid rgb(30, 83, 35);
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    /* Shows hand cursor */
+    font-size: 22px;
+    display: flex;
+    /* First use of Flexbox */
+    align-items: center;
+    /* Centers vertically */
+    justify-content: center;
+    /* Centers horizontally */
+    text-decoration: none;
+    color: black;
+}
+
+.button:hover {
+    background-color: rgb(66, 124, 82);
+}
+
+/* === Wrapper for All Content === */
+.content-wrapper {
+    display: flex;
+    flex-direction: column;
+    /* Stacks items vertically */
+    align-items: center;
+    /* Centers horizontally */
+    width: 100%;
+}
+
+/* === Popup Window Box === */
+.window-box {
+    position: fixed;
+    /* Stays in place when scrolling */
+    width: 550px;
+    height: 400px;
+    background-color: mintcream;
+    border: 5px solid rgb(30, 83, 35);
+    border-radius: 10px;
+    box-shadow: 5px 5px 2px rgba(0, 0, 0, 0.338);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* Perfect centering */
+    z-index: 1000;
+    /* Stays above other elements */
+    user-select: none;
+    /* Prevents text selection */
+}
+
+#chickenWindow.window-box {
+    height: 500px;
+    overflow: hidden !important;
+}
+
+#chickenWindow .window-content {
+    padding: 100 !important;
+    overflow: hidden !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+/* --- Bigger custom image viewer window (covers more of the screen, not full-screen) --- */
+.window-box.image-viewer {
+    /* prefer a large viewport-aware size but never exceed the viewport */
+    width: min(1200px, 95vw);
+    height: min(840px, 92vh);
+
+    /* keep centered */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-sizing: border-box;
+    z-index: 2000;
+    /* above normal windows */
+    padding: 0;
+    /* transition removed so the viewer opens and moves immediately (no smoothing) */
+}
+
+/* Slightly larger header for the viewer so chrome doesn't overlap image */
+.image-viewer .window-header {
+    padding: 12px 14px;
+    height: 56px;
+    box-sizing: border-box;
+}
+
+/* Make the viewer content fill the window and center the image */
+.image-viewer .window-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+    /* small padding around image */
+    width: 100%;
+    height: calc(100% - 56px);
+    /* subtract header height */
+    max-height: none;
+    overflow: hidden;
+    /* avoid layout shifts while image scales */
+}
+
+/* Image should always be centered, scale up or down to fit the viewer,
+   and use nearest-neighbor rendering for pixel art */
+.image-viewer #viewerImage,
+.image-viewer .window-content img {
+    position: static;
+    /* ensure flex centering works (overrides global img rule) */
+    margin: auto;
+    display: block;
+
+    /* match gallery behavior: respect container width, keep aspect ratio,
+       and never overflow the viewer content area (scales DOWN to fit) */
+    width: 100%;
+    /* fills available width like gallery images */
+    height: auto;
+    /* preserve aspect ratio */
+    max-width: 100%;
+    max-height: 100%;
+
+    object-fit: contain;
+
+    /* ensure no inherited scale/transform from global img rules */
+    transform: none !important;
+    scale: 1 !important;
+
+    /* pixel-art rendering */
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    -ms-interpolation-mode: nearest-neighbor;
+
+    /* no transitions here either so resize is immediate */
+}
+
+/* Optional: dim background slightly when viewer is open (if you want visual focus) */
+.window-box.image-viewer.opening {
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
+}
+
+/* === Window Header (Draggable Bar) === */
+.window-header {
+    padding: 10px;
+    background-color: rgb(30, 83, 35);
+    color: white;
+    cursor: move;
+    /* Shows move cursor */
+    display: flex;
+    justify-content: space-between;
+    /* Title left, button right */
+    align-items: center;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.close-button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+/* === Window Content Area === */
+.window-content {
+    padding: 20px;
+    max-height: 310px;
+    /* Example fixed height */
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-color: rgb(30, 83, 35) mintcream;
+    /* thumb, track for Firefox */
+    scrollbar-width: thin;
+}
+
+/* style scrollbars inside windows to match window colors */
+/* WebKit browsers */
+.window-content::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+.window-content::-webkit-scrollbar-track {
+    background: mintcream;
+    border-radius: 10px;
+}
+
+.window-content::-webkit-scrollbar-thumb {
+    background-color: rgb(30, 83, 35);
+    border-radius: 10px;
+    border: 3px solid mintcream;
+    /* creates padding around thumb so track shows */
+}
+
+.window-content::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(45, 110, 50);
+}
+
+/* Prevents text from wrapping in Box headings */
+.Box h1,
+.Box h2 {
+    white-space: pre;
+}
+
+/* Makes text wrap properly inside windows */
+.window-content h2,
+.window-content h3,
+.window-content p {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
+}
+
+/* Class applied when dragging a window */
+.dragging {
+    user-select: none;
+    cursor: grabbing !important;
+}
+
+/* === Portfolio Items === */
+.portfolio-item {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    /* Info takes 2/3, image 1/3 */
+    gap: 20px;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid rgb(30, 83, 35);
+}
+
+.portfolio-info {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.portfolio-info h3 {
+    margin: 0;
+    color: rgb(30, 83, 35);
+}
+
+.portfolio-info a {
+    color: rgb(66, 124, 82);
+    text-decoration: none;
+}
+
+.portfolio-info a:hover {
+    text-decoration: underline;
+}
+
+/* Portfolio images */
+.portfolio-image img {
+    position: static;
+    /* Overrides earlier absolute positioning */
+    width: 100%;
+    height: auto;
+    scale: 100%;
+    border-radius: 5px;
+    box-shadow: 3px 3px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Project description text */
+.project-description {
+    margin: 8px 0;
+    font-size: 0.9em;
+    line-height: 1.4;
+}
+
+/* === Social Media Section === */
+.social-media {
+    display: flex;
+    justify-content: space-around;
+    /* Even spacing */
+    align-items: center;
+    padding: 30px;
+}
+
+.social-link img {
+    width: 40px;
+    height: 40px;
+    position: static;
+    scale: 150%;
+    transition: transform 0.2s;
+    /* Smooth hover effect */
+}
+
+.social-link img:hover {
+    transform: scale(1.1);
+}
+
+/* === Window Icon === */
+.window-icon {
+    width: fit-content;
+    height: fit-content;
+    position: static;
+    scale: 300%;
+    image-rendering: crisp-edges;
+}
+
+/* === Window Banner (small image in header) === */
+.window-banner {
+    position: absolute;
+    top: -35px;
+    /* Moves banner above header */
+    left: 80%;
+    transform: translateX(-50%);
+    z-index: 999;
+}
+
+.window-banner-image {
+    position: static;
+    scale: 300%;
+    image-rendering: crisp-edges;
+}
+
+/* === Gallery Images === */
+.gallery-image img {
+    position: static;
+    width: 100%;
+    height: auto;
+    scale: 90%;
+    border-radius: 5px;
+    box-shadow: 3px 3px 2px rgba(0, 0, 0, 0.2);
+    image-rendering: crisp-edges;
+}
+
+/* Image viewer specific sizing so the image is large but constrained */
+.image-viewer .window-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0px;
+    box-sizing: border-box;
+
+    /* make the viewer content fill the window and ignore the global .window-content max-height */
+    width: 100%;
+    height: calc(100% - 60px);
+    max-height: none;
+    overflow: hidden;
+}
+
+/* viewer image: centered, scales up or down to fit while preserving pixel-art crispness */
+#viewerImage {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    display: block;
+    margin: auto;
+    object-fit: contain;
+
+    /* pixel-art rendering */
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    -ms-interpolation-mode: nearest-neighbor;
+}
+
+/* optional: cursor when hovering large image to indicate it can be closed by clicking header */
+.image-viewer .window-header {
+    cursor: move;
+}
+
+/* Ensure viewer image (and images inside window-content) are in normal flow so flex centering works */
+.image-viewer .window-content img,
+.image-viewer #viewerImage {
+    position: static;
+    /* override the global absolute img rule */
+    margin: auto;
+    display: block;
+
+    /* match gallery behavior: respect container width, keep aspect ratio,
+       and never overflow the viewer content area (scales DOWN to fit) */
+    width: 100%;
+    /* fills available width like gallery images */
+    height: auto;
+    /* preserve aspect ratio */
+    max-width: 100%;
+    max-height: 100%;
+
+    object-fit: contain;
+
+    /* ensure no inherited scale/transform from global img rules */
+    transform: none !important;
+    scale: 1 !important;
+
+    /* pixel-art rendering */
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    -ms-interpolation-mode: nearest-neighbor;
+}
+
+
+/* === Chicken Game Button === */
+.chicken-button {
+    position: relative;
+    cursor: pointer;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    scale: 4;
+    transform-origin: center;
+    margin-bottom: -40px;
+    margin-left: -1400px;
+    /* adjust this value */
+    margin-top: 10px;
+    /* adjust this value */
+    z-index: 10;
+}
